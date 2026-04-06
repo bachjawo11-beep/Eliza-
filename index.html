@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eliza's Kitchen | Ultra Premium Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Reset & Body */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Roboto', sans-serif; overflow-x:hidden; background:#4b2e05; color:#fff; }
+
+/* Flowing dark golden gradient background */
+@keyframes darkGoldenBG { 0% {background-position:0% 50%;} 50% {background-position:100% 50%;} 100% {background-position:0% 50%;} }
+body, header, footer, .hero { 
+  background: linear-gradient(270deg, #4b2e05, #6b3b0f, #7a4e0d, #5c3506); 
+  background-size: 800% 800%; 
+  animation: darkGoldenBG 25s ease infinite; 
+}
+
+/* Header text */
+.animated-text { font-family:'Pacifico', cursive; font-size:3rem; color:red; text-align:center; text-shadow:2px 2px 5px #000; animation:heartbeat 1.2s ease-in-out infinite; }
+@keyframes heartbeat {0%,100%{transform:scale(1);}25%{transform:scale(1.05);}50%{transform:scale(1.1);}75%{transform:scale(1.05);}}
+
+/* Glowing part for "Made with Love ❤️" */
+.glow { 
+  background: linear-gradient(45deg, #FFD700, #FFEC8B, #FFC300); 
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; 
+  animation: glowText 2s ease-in-out infinite alternate;
+}
+@keyframes glowText { 0% {filter:drop-shadow(0 0 5px #FFD700);} 50% {filter:drop-shadow(0 0 15px #FFEC8B);} 100% {filter:drop-shadow(0 0 25px #FFC300);} }
+
+/* Header & nav */
+header { color:white; padding:1rem 2rem; text-align:center; position:relative; z-index:10; }
+nav { display:flex; justify-content:center; margin-top:10px; gap:20px; flex-wrap:wrap; }
+nav a { text-decoration:none; color:white; font-weight:bold; padding:10px 20px; border-radius:50px; position:relative; overflow:hidden; transition:0.4s; }
+nav a::after { content:''; position:absolute; left:50%; top:50%; width:300%; height:300%; background:rgba(255,255,255,0.2); transform:translate(-50%,-50%) scale(0); border-radius:50%; transition:0.5s; }
+nav a:hover::after { transform:translate(-50%,-50%) scale(1); }
+nav a:hover { transform:scale(1.1); }
+
+/* Hero */
+.hero { height:80vh; display:flex; justify-content:center; align-items:center; color:white; text-shadow:2px 2px 8px black; font-size:2.5rem; text-align:center; }
+
+/* Sections */
+section { padding:60px 20px; text-align:center; position:relative; }
+section h2 { font-size:2.5rem; margin-bottom:20px; color:white; text-shadow:1px 1px 5px #000; }
+section p { max-width:700px; margin:auto; margin-bottom:30px; font-size:1.2rem; color:white; text-shadow:1px 1px 3px #000; }
+
+/* Premium Buttons */
+.btn { display:inline-block; padding:12px 30px; margin:10px; font-size:1rem; font-weight:bold; color:white; border:none; border-radius:50px; cursor:pointer; background:linear-gradient(45deg,#FFC300,#FFD700); background-size:200% 200%; animation:goldenBG 5s ease infinite; box-shadow:0 4px 15px rgba(0,0,0,0.3); transition:0.4s; position:relative; overflow:hidden; }
+.btn:hover { transform:scale(1.1); box-shadow:0 8px 25px rgba(255,215,0,0.7); }
+
+/* Infinite Scrolling Food Gallery */
+.food-gallery-wrapper { overflow:hidden; }
+.food-gallery { display:flex; gap:20px; animation:scrollGallery 40s linear infinite; }
+@keyframes scrollGallery { 0% {transform:translateX(0);} 100% {transform:translateX(-50%);} }
+.food-card { min-width:250px; background:#6b3b0f; border-radius:20px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.3); flex-shrink:0; transition:0.3s; cursor:pointer; position:relative; }
+.food-card:hover { transform:translateY(-10px); box-shadow:0 8px 25px rgba(255,215,0,0.5); }
+.food-card img { width:100%; height:200px; object-fit:cover; }
+.food-card h3 { padding:15px 10px 0 10px; color:#FFD700; }
+.food-card p { padding:0 10px 10px 10px; color:#fff; }
+.add-cart { display:block; margin:10px auto 10px; padding:10px 20px; background:#FF8C00; color:white; border-radius:50px; border:none; cursor:pointer; transition:0.3s; animation:btnPop 2s infinite alternate; }
+.add-cart:hover { transform:scale(1.1); box-shadow:0 8px 20px rgba(255,140,0,0.7); }
+.quantity { width:50px; padding:5px; text-align:center; border-radius:10px; border:1px solid #ccc; margin:5px; }
+
+/* Cart Sidebar */
+#cartSidebar { position:fixed; right:-400px; top:0; width:400px; height:100%; background:#4b2e05; box-shadow:-5px 0 20px rgba(0,0,0,0.5); transition:0.5s; padding:20px; overflow-y:auto; z-index:100; }
+#cartSidebar h3 { color:#FFD700; margin-bottom:20px; }
+.cart-item { display:flex; justify-content:space-between; margin-bottom:10px; align-items:center; }
+.cart-item button { background:#FF8C00; color:white; border:none; border-radius:50px; padding:2px 10px; cursor:pointer; }
+
+/* Cart Toggle Button with count badge */
+#cartToggle { position:fixed; right:20px; top:20px; z-index:101; background:#FF8C00; color:white; border:none; border-radius:50px; padding:12px 20px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.5); animation:glow 2s infinite alternate; }
+#cartToggle span { background:red; border-radius:50%; padding:2px 6px; font-size:0.9rem; margin-left:5px; }
+
+/* WhatsApp Floating Button with pulse & count badge */
+#whatsappBtn { position:fixed; bottom:30px; right:20px; z-index:101; background:#25D366; color:white; border:none; border-radius:50px; padding:15px 20px; font-size:1.2rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.5); transition:0.3s; animation:whatsappPulse 2s infinite; }
+#whatsappBtn span { background:red; border-radius:50%; padding:2px 6px; font-size:0.9rem; margin-left:5px; }
+
+/* Footer */
+footer { padding:40px 20px; text-align:center; color:white; }
+footer a { color:white; text-decoration:none; margin:0 10px; transition:0.3s; }
+footer a:hover { text-decoration:underline; }
+
+/* Floating Hearts */
+.heart { position:absolute; font-size:1.2rem; animation:floatUp 6s linear infinite; }
+@keyframes floatUp {0%{transform:translateY(100vh) rotate(0deg); opacity:1;}100%{transform:translateY(-10vh) rotate(360deg); opacity:0;}}
+
+/* Responsive */
+@media(max-width:768px){ header h1{font-size:2.2rem;} .hero{font-size:2rem;} .food-card{min-width:200px;} #cartSidebar{width:80%;}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 class="animated-text">Eliza's Kitchen – <span class="glow">Made with Love ❤️</span></h1>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#menu">Menu</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h2>Delicious African Flavors 🍲</h2>
+</section>
+
+<section id="about">
+  <h2>About Eliza's Kitchen</h2>
+  <p>Welcome to Eliza's Kitchen! Authentic African dishes with love ❤️. Traditional flavors, modern flair!</p>
+  <button class="btn" onclick="playMusic()">🎵 Play Music</button>
+</section>
+
+<section id="menu">
+  <h2>Our Menu</h2>
+  <div class="food-gallery-wrapper">
+    <div class="food-gallery" id="gallery">
+      <!-- Food cards duplicated for scrolling -->
+      <div class="food-card"><img src="https://images.unsplash.com/photo-1605476006331-7b68d5769a0f" alt="Jollof Rice"><h3>Jollof Rice</h3><p>GMD 200</p><input type="number" class="quantity" value="1"><button class="add-cart" onclick="addToCart('Jollof Rice',200,1)">Add to Cart</button></div>
+      <div class="food-card"><img src="https://images.unsplash.com/photo-1603133872876-93c7c3b1b6e1" alt="Fufu & Soup"><h3>Fufu & Soup</h3><p>GMD 250</p><input type="number" class="quantity" value="1"><button class="add-cart" onclick="addToCart('Fufu & Soup',250,1)">Add to Cart</button></div>
+      <div class="food-card"><img src="https://images.unsplash.com/photo-1617196032567-bae6e7f3dcb1" alt="Grilled Fish"><h3>Grilled Fish</h3><p>GMD 300</p><input type="number" class="quantity" value="1"><button class="add-cart" onclick="addToCart('Grilled Fish',300,1)">Add to Cart</button></div>
+      <!-- duplicates for infinite scroll -->
+      <div class="food-card"><img src="https://images.unsplash.com/photo-1605476006331-7b68d5769a0f" alt="Jollof Rice"><h3>Jollof Rice</h3><p>GMD 200</p><input type="number" class="quantity" value="1"><button class="add-cart" onclick="addToCart('Jollof Rice',200,1)">Add to Cart</button></div>
+      <div class="food-card"><img src="https://images.unsplash.com/photo-1603133872876-93c7c3b1b6e1" alt="Fufu & Soup"><h3>Fufu & Soup</h3><p>GMD 250</p><input type="number" class="quantity" value="1"><button class="add-cart" onclick="addToCart('Fufu & Soup',250,1)">Add to Cart</button></div>
+      <div class="food-card"><img src="https://images.unsplash.com/photo-1617196032567-bae6e7f3dcb1" alt="Grilled Fish"><h3>Grilled Fish</h3><p>GMD 300</p><input type="number" class="quantity" value="1"><button class="add-cart" onclick="addToCart('Grilled Fish',300,1)">Add to Cart</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>Contact Us</h2>
+  <p>📍 Location: Bakau, The Gambia</p>
+  <p>📞 Phone: +220 3991591</p>
+  <p>💌 Email: elizaskitchen@gm.com</p>
+  <div>
+    <a class="btn" href="mailto:elizaskitchen@gm.com">Email Us</a>
+    <a class="btn" href="tel:+2203991591">Call Us</a>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Eliza's Kitchen | African Cuisine & Love ❤️</p>
+  <p>
+    <a href="#">Facebook</a>|
+    <a href="#">Instagram</a>|
+    <a href="#">Twitter</a>
+  </p>
+</footer>
+
+<!-- Floating Hearts -->
+<script>
+function createHearts(){
+  for(let i=0;i<20;i++){
+    const heart=document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left=Math.random()*100+'vw';
+    heart.style.fontSize=(10+Math.random()*20)+'px';
+    heart.style.animationDuration=(4+Math.random()*4)+'s';
+    heart.innerText='❤️';
+    document.body.appendChild(heart);
+  }
+}
+createHearts();
+</script>
+
+<!-- Music, Cart & WhatsApp -->
+<audio id="kitchenMusic" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<button id="cartToggle" onclick="toggleCart()">🛒 Cart <span id="cartCount">0</span></button>
+<div id="cartSidebar">
+  <h3>Your Cart</h3>
+  <div id="cartItems"></div>
+  <p><strong>Total: GMD <span id="cartTotal">0</span></strong></p>
+  <button class="btn" onclick="placeOrder()">Place Order</button>
+</div>
+
+<button id="whatsappBtn" onclick="openWhatsApp()">💬 WhatsApp <span id="whatsappCount">0</span></button>
+
+<script>
+let cart=[];
+function playMusic(){
+  const music=document.getElementById('kitchenMusic');
+  if(music.paused){ music.play(); } else { music.pause(); }
+}
+function addToCart(item, price, qty){
+  cart.push({item, price: price*qty, qty: qty});
+  updateCart();
+}
+function removeFromCart(index){
+  cart.splice(index,1);
+  updateCart();
+}
+function updateCart(){
+  const cartItems=document.getElementById('cartItems');
+  cartItems.innerHTML='';
+  let total=0;
+  cart.forEach((c,i)=>{
+    total+=c.price;
+    const div=document.createElement('div');
+    div.className='cart-item';
+    div.innerHTML=`${c.item} x${c.qty} - GMD ${c.price} <button onclick="removeFromCart(${i})">x</button>`;
+    cartItems.appendChild(div);
+  });
+  document.getElementById('cartTotal').innerText=total;
+  document.getElementById('cartCount').innerText=cart.length;
+  document.getElementById('whatsappCount').innerText=cart.length;
+}
+function toggleCart(){
+  const sidebar=document.getElementById('cartSidebar');
+  sidebar.style.right = (sidebar.style.right === '0px') ? '-400px' : '0px';
+}
+function placeOrder(){
+  alert('Thank you! Your order has been placed ❤️');
+  cart=[];
+  updateCart();
+}
+function openWhatsApp(){
+  let message = cart.map(c=>`${c.item} x${c.qty}`).join(', ');
+  window.open(`https://wa.me/2203991591?text=${encodeURIComponent("Hello! I'd like to order: " + message)}`);
+}
+</script>
+
+</body>
+</html>
