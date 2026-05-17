@@ -40,7 +40,14 @@ nav a:hover::after { transform:translate(-50%,-50%) scale(1); }
 nav a:hover { transform:scale(1.1); }
 
 /* Hero */
-.hero { height:80vh; display:flex; justify-content:center; align-items:center; color:white; text-shadow:2px 2px 8px black; font-size:2.5rem; text-align:center; }
+.hero {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
 
 /* Sections */
 section { padding:60px 20px; text-align:center; position:relative; }
@@ -131,7 +138,7 @@ footer a:hover { text-decoration:underline; }
 <section id="contact">
   <h2>Contact Us</h2>
   <p>📍 Location: Dippa kunda, The Gambia</p>
-  <p>📞 Phone: +220 3991591</p>
+  <p>📞 Phone: +220 7597080</p>
   <p>💌 Email: Fantaskitchen@gm.com</p>
   <div>
     <a class="btn" href="mailto:elizaskitchen@gm.com">Email Us</a>
